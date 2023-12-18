@@ -6,8 +6,9 @@ import { EstateQueryDto } from './dto/estate-query.dto';
 export class ResasController {
   constructor(private readonly resasService: ResasService) {}
 
+  // クエリパラメータを受け取り、UseCaseディレクトリ内のサービスを呼び出す
   @Get()
-  findAll(@Query() query: EstateQueryDto): string {
-    return this.resasService.findAll(query);
+  async findAll(@Query() query: EstateQueryDto): Promise<string> {
+    return await this.resasService.findAll(query);
   }
 }
