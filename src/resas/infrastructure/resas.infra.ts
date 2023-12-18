@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EstateQueryDto } from '../dto/estate-query.dto';
 import { ResasRepository } from '../repository/resas.repository';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { EstateTransactionResponse } from '../../../types/estate-transaction.response';
 
 @Injectable()
 export class ResasInfrastracture implements ResasRepository {
@@ -12,15 +13,21 @@ export class ResasInfrastracture implements ResasRepository {
     private configService: ConfigService,
   ) {}
 
-  async findAll(estateQueryDto: EstateQueryDto): Promise<any> {
-    const url = `https://opendata.resas-portal.go.jp/api/v1/cities?prefCode=${prefCode}`;
+  async findAll(
+    year: number,
+    prefCode: number,
+    cityCode: string | number,
+    displayType: number,
+  ): Promise<EstateTransactionResponse> {
+    const url = `https://opendata.resas-portal.go.jp/api/v1/townPlanning/estateTransaction/bar?year=${year}&prefCode=${prefCode}&cityCode=${cityCode}&displayType=${displayType}`;
     const apiKey = this.configService.get<string>('RESAS_API_KEY');
 
-    return this.httpService
+    const response = this.httpService
       .get(url, {
         headers: { 'X-API-KEY': apiKey },
       })
-      .pipe(map((response) => response.data))
-      .toPromise();
+      .pipe(map((res) => res.data));
+
+    return firstValueFrom(response);
   }
 }
