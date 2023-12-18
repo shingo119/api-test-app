@@ -4,6 +4,6 @@ import { ResasController } from './resas.controller';
 
 @Module({
   controllers: [ResasController],
-  providers: [ResasService]
+  providers: [ResasService],
 })
 export class ResasModule {}
