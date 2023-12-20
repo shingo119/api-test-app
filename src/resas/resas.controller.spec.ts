@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResasController } from './resas.controller';
-import { ResasService } from './use-cases/resas.service';
+import { GetEstateTransactionUseCase } from './use-cases/getEstateTransaction.useCase';
 import { EstateTransactionResponse } from '../../types/estate-transaction.response';
 import { HttpException } from '@nestjs/common';
 
 describe('ResasController', () => {
   let controller: ResasController;
-  let service: ResasService;
+  let service: GetEstateTransactionUseCase;
 
   beforeEach(async () => {
     // モックサービスの作成
     const mockService = {
-      findAll: jest.fn().mockResolvedValue({
+      getEstateTransaction: jest.fn().mockResolvedValue({
         message: null,
         result: {
           prefCode: '13',
@@ -32,14 +32,14 @@ describe('ResasController', () => {
       controllers: [ResasController],
       providers: [
         {
-          provide: ResasService,
+          provide: GetEstateTransactionUseCase,
           useValue: mockService,
         },
       ],
     }).compile();
 
     controller = module.get<ResasController>(ResasController);
-    service = module.get<ResasService>(ResasService);
+    service = module.get<GetEstateTransactionUseCase>(GetEstateTransactionUseCase);
   });
 
   it('正常系', async () => {
@@ -70,7 +70,7 @@ describe('ResasController', () => {
   });
 
   it('異常系 - サービス層からのエラー', async () => {
-    jest.spyOn(service, 'findAll').mockImplementation(() => {
+    jest.spyOn(service, 'getEstateTransaction').mockImplementation(() => {
       throw new HttpException('Some error', 404);
     });
     const query = {

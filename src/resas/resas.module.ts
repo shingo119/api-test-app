@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ResasService } from './use-cases/resas.service';
+import { GetEstateTransactionUseCase } from './use-cases/getEstateTransaction.useCase';
 import { ResasController } from './resas.controller';
 import { ResasInfrastracture } from './infrastructure/resas.infra';
 import { ConfigModule } from '@nestjs/config';
@@ -15,7 +15,7 @@ import { HttpModule } from '@nestjs/axios';
   ],
   controllers: [ResasController],
   providers: [
-    ResasService,
+    GetEstateTransactionUseCase,
     { provide: RESAS_REPOSITORY_TOKEN, useClass: ResasInfrastracture },
   ],
 })
